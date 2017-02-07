@@ -1,0 +1,1048 @@
+Object的创建，三种方法
+1\ var newObject={};//字面值
+2\ var newObject=Object.create(Object.prorotype);//根据原型创建
+3\ var newObject=new Object();//new 关键字
+属性值的创建
+1\ newObject.someKey="Hello World";
+2\ newObject["someKey"]="Hello World";
+3\ Object.defineProperty(newObject,"someKey",{
+value:"for more control of the property's behavior",
+writable:true,
+enumerable:true,
+configurable:true
+})
+//函数式
+var defineProp=function(){
+var config={
+value:value,
+writable:true,
+enumerable:true,
+configurable:true
+}
+Object.defineProperty(obj,key,config);
+}
+4\ Object.defineProperties(newObject,{
+"someKey":{
+value:"Hello World",
+writable:true
+},
+"anotherKey":{
+value:"Foo bar",
+writable:false
+}
+})
+构造函数
+function Car(model,year,miles){
+this.model=model;
+this.year=year;
+this.miles=miles;
+this.toString=function(){
+return this.model+"had done"+this.miles+"miles";
+}
+}
+var civic=new Car('Huayra',2010,5000);
+重写方法
+Car.prorotype.toString=function(){
+return this.model+"had done"+this.miles+"miles";
+}
+
+
+
+JavaScript DesignPattern
+1\Create a Class
+function Car(model){
+this.model=model;
+this.color='silver';
+this.year='2012';
+this.getInfo=function(){
+return this.model+" "+this.year;
+}
+}
+2\overView of DesignPattern
+Creational\\创建型模式
+Class
+Factory Method
+工厂方法，基于事件或接口化数据创建一个实例
+Object
+Abstract Factory\\抽象工厂
+基于借口约定或父类，创建一系列（族）实例。消除与具体类的耦合
+Builder
+建立者模式将对象建造和表示隔开
+Prototype
+原型，用作模板
+Singleton
+在全局作用域(global access points)，一个类对应一个
+Structural\\结构型模式
+Class
+Adapter\\适配器
+匹配不同的接口，通常使老接口得以复用
+Object
+Adapter
+Bridge\\桥接
+将一个对象的接口和实现分开
+Composite
+一个简单与复合对象的组织结构，将各部分组织成一个整体
+Decorator
+为对象动态添加可替换的处理方法
+Facade
+隐藏类内部的复杂性
+Flyweight
+一个细粒度的实例，用于分享信息
+Proxy
+一个站位对象，用于代替真实对象
+Behavioral\\表现型模式
+Class
+Iterpreter
+解释器，用于将现有语言元素匹配到目标语言
+Template Method
+在方法中创建一个算法壳，并在具体执行中作出区别
+Object
+Chain of Responsibility
+链式职责传递
+Command
+将命令请求封装到一个对象中，实现日志，队列，错误实现
+Iterator
+迭代器实现在不了解序列内部实现的前提下，按序列获取集合内容
+Mediator
+简化类之间的通信，从而避免一批类之间的相互引用
+Mementto
+捕捉对象内部状态并做延迟存储
+Observer
+通知一系列类进行改变，保持他们之间的一致性
+State
+状态机
+Strategy
+策略模式
+将算法封装到类中，把选择和实现隔开
+Visitor
+在不改变类的前提下，为一个类提供新的方法
+完全不懂的模式
+桥接模式
+flyweght
+Template Method
+mediator
+strategy
+visitor
+state
+不熟悉的模式
+建造者模式
+
+The Module Pattern//模块模式
+Modules
+模块是健壮架构中的一个完整的部分，通常可以保持项目中单元的独立性与组织性
+Js下实现模块的方法：
+The Module pattern//享元模式
+Object literal notation//字面值标注
+AMD modules//异步匿名元模块
+CommonJS modules//CommonJS标准
+ECMAScript Harmony modules//ECMAScript一致性
+Object Literals//字面值
+var muModule={
+myProperty:"someValue",
+//举个例子，我们可以建立一个对象的配置
+myConfig:{
+useCaching:true,
+language:"en"
+},
+//基本方法
+saySomething:function(){
+console.log("Where in the world is Paul Irish today?")
+},
+reportMyConfig:function(){
+console.log("Caching is:"+(this.myConfig.useCaching?"enabled":"disabled"))
+},
+updateMyConfig:function(newConfig){
+if(typeof newConfig=="object"){
+this.myConfig=newConfig;
+console.log(this.myConfig.language);
+}
+}
+}
+//更新config
+myModule.updateMyConfig({
+language:"fr",
+useCaching:false
+})
+//更新
+myModule.reportMyConfig();
+Privacy//私有方法模仿
+var testModule=(function(){
+var counter=0;
+return {
+config:{
+name:"testModule"
+}
+incrementCounter:function(){
+console.log(this.config);
+return counter++;
+},
+resetCounter:function(){
+console.log("counter value prior to reset: "+counter);
+counter=0;
+}
+};
+})();
+Template//一个带有命名空间，私有共有方法的模板
+var myNamespac=(function(){
+var myPrivateVar,myPrivateMethod;
+//evaluation
+myPrivateVar=0;
+myPrivateMethod=function(foo){
+console.log(foo);
+}
+return {
+myPublicVar:"foo",
+myPublicFunction:function(){
+myPrivateVar++;
+myPrivateMegthod(bar);
+}
+}
+})
+Example://一个篮子的实例
+var basketModule=(function(){
+var basket=[];
+function doSomethingPrivate(){
+//...
+}
+function doSomethingElsePrivate(){
+}
+return {
+addItem:function(values){
+basket.push(values);
+},
+getItemCount:function(){
+return basket.length;
+},
+doSomething:doSomethingPrivate,
+getTotal:function(){
+var q=this.getItemCount(),
+p=0;
+while(q--){
+p+=basket[q].price;
+}
+return p;
+}
+}
+})();
+basketModule.addItem({
+item:"bread",
+price:0.5
+})
+console.log(basketModule.getItemCount());
+console.log(basketModule.getTotal());
+console.log(basketModule.basket);//这里会显示未定义，也就是只能在Module内部访问
+这个例子中，有一个私有属性basket还有两个私有方法
+公有方法中，addItem通过访问basket进行私有属性的修改
+getItemcount可以后的私有属性的命名
+doSomething直接指向私有方法doSomethingPrivate()
+getTotal中
+先通过共有方法获得basket数组的数量
+然后递加basket中元素的价格，最后返回总价格
+Module Pattern Variations//一些变化的使用
+Import mixins
+//我们可以轻易的引用其他的模块并进行本地的重命名
+var myModule=(function(jQ,_){
+function privateMethod1(){
+$(".container").html("test");
+}
+function privateMethod2(){
+console.log(_.min([10,5,100,2,10000]));
+}
+return{
+publicMethod:function(){
+privateMethod1();
+}
+}
+})($,_);
+myModule.publicMethod();//这里有一点疑惑，$本来就可以从低级scope中获取，为什么还要传值
+Exprots//向全局作用域输出一个模块
+var myModule=(function(){
+//Module object
+var module={},
+privagteVariable="Hello World";
+function privateMethod(){
+//...
+}
+module.publicProperty="Foobar";
+module.publicMethod=function(){
+console.log(privateVariable);
+};
+return module;
+})();
+Dojo注册模块内对象
+require(["dojo/_base/customStore"],function(store){
+//using dojo.setObject()
+store.setObject("basket.core",(function(){
+var basket=[];
+function privateMethod(){
+console.log(basket);
+}
+return {
+publicMethod:function(){
+privateMethod();
+}
+}
+})());
+})
+Ext中的命名空间
+Ext.namespace("myNameSpace");
+myNameSpace.app=(function(){
+//在这一步中，DOM元素还没有加载
+//私有的变量
+var btn1,
+privVar1=11;
+//私有函数
+var btnHandler=function(button,event){
+console.log("privVar1="+privVar1);
+console.log("this.btn1Text=")
+}
+//公有空间
+return {
+btn1Text:"Button 1",
+init:function(){
+if(Ext.Ext2){
+btn1=new Ext.Button({
+renderTo:"btn1-ct",
+text:this.btn1Text,
+handler:btn1Handler
+});
+}else{
+btn1=new Ext.Button("btn1-ct",{
+text:this.btn1Text,
+handler:btn1Handler
+});
+}
+}
+}
+})();
+YUI
+Y.namespace("store.basket");
+Y.store.basket=(function(){
+var myPrivateVar,myPrivateMethod;
+//一些私有的函数：
+myPrivateVar="I can be accessed only within Y.store.basket";
+myPrivateMethod=function(){
+Y.log("I can be accessed only...")
+}
+return {
+myPublicProperty:"I'm a public property.",
+myPublicMethod:function(){
+Y.log("I'm a public method");
+//在basket内可调用私有函数
+Y.log(myPrivateVar);
+Y.log(myPrivateMethod());
+//
+Y.log(this.myPublicProperty);
+}
+}
+})();
+Jquery
+//这个方法可以添加模块，实现模块的初始化
+function library(module){
+$(function)({
+if(module.init){
+module.init();
+}
+});
+reutrn module;
+}
+var myLibrary=library(function(){
+return{
+init:function(){
+//这里添加模块的实现
+}
+}
+})());
+
+The Singleton Pattern
+单例模式。传统上来讲，单例模式可以实现为一个类。我们都知道类可以进行实例化。这个类中有一个方法，如果类的实例尚未创建，可以创建类的实例，如果已经创建，则返回对实例的引用。
+单例模式不同于静态类/对象，我们可以延迟实例化，大体上是因为他们需要的某些信息是不可用的。而且对于之前没有引用他们的代码段，不能轻易的取回他们。因为单例既不是类又不是对象，而是一个结构。想象一下闭包变量为何成为闭包，是因为有函数形成了闭包。
+Inplementation
+var mySingleton=(function(){
+var instance;
+function init(){
+//Singleton
+//Private method and variables
+function privateMethod(){
+console.log("I am private");
+}
+var privateVariable="I'm also private";
+var privateRandomNumber=Math.random();
+return{
+publicMethod:function(){
+console.log("The public can see me!");
+},
+publicProperty:"I am also public",
+getRandomNumber:function(){
+return privateRandomNumber;
+}
+};
+};
+return{
+getInstance:function(){
+if(!instance){
+instance=init();
+}
+return instance;
+}
+}
+})();
+//这里有一个单例的实现
+我们来简单的分析一下这个单例的实现。初始化的时候会生成一级闭包，并附命名空间mySingleton
+var instance//这时在闭包内声明变量instance用于存储单例。
+function init(){}//这个函数是一个普通的模块模式实现，其中包含私有共有方法，可以进行实现
+return {getInstance:function(){}}//这里返回的对象中有一个方法，可以实例化单例或者获取引用
+//这里比较重要的一点是：
+//getInstance对于获取对象一定要做一个存在判断，否则实现的单例无效
+if(!instance){
+instance=init();
+}
+简单了解一下单例的使用场景：
+单例适用于在一个系统中，单个需要跟许多对象进行协作的情况
+var SingletonTester=(function(){
+function Singleton(options){
+options=options||{};
+//设置一些
+this.name="SingletonTester";
+this.pointX=options.pointX||6;
+this.pointY=options.pointY||10;
+}
+//our instance holder
+var instance;
+var _static={
+name:"SingletonTester",
+getInstance:function(options){
+if(instance===undefined){
+instance=new Singleton(options);
+}
+return instance;
+}
+};
+return _static;
+})();
+//测试用例
+var SingletonTester=SingletonTester.getInstance({
+pointX:5
+});
+console.log(SingletonTester.pointX);
+//通过这例子我们可以看出，单例模式的核心在于static的部分
+//这个部分必要的特点为必须进行实例是否存在的判断，并返回实例或引用
+//而在接受参数和实例成员方面，我们可以看到，单例模式可以按自己的需求进行各种变化
+//比如在这个例子中实例的初始话发生了很大的变化，new关键字
+//而接受的参数也给函数填入了新的参数
+下面做一个例子，思考一下单例在什么情况下可以使用，例如全局只需要一个对象去发送post请求:
+var singletonAjax=(function({
+var poster=function(){
+return{
+post:function(url,data,callback){
+$.post(url,data,callback);
+},
+get:function(){
+$.get(url,data,callback);
+}
+}
+};
+//创建实例
+var instance;
+var _static={
+name="hello,I'm a poster",
+getInstance:function(){
+if(instance===undefined){
+return new poster();
+}
+return instance;
+}
+}
+return _static;
+})();
+console.log(singletonAjax.getInstance());
+
+The Observer Pattern
+观察者模式。一个集合同事依赖于一个对象，这个对象在发生任何改变时都自动通知那些对象。单个发布通知的对象叫做发布者，而接受发布的集合中的对象都成为。
+模块组件：
+发布者
+观察者
+固定发布者
+固定观察者
+实现：
+//列表君，提供一系列删除增加的操作
+function ObserverList(){
+this.observerList=[];
+};
+ObserverList.prototype.add=function(obj){
+return this.observerList.push(obj);
+};
+ObserverList.prototype.count=function(){
+return this.observerList.length;
+};
+ObserverList.prototype.get=function(index){
+if(index>-1&&index<this.observerList.length){
+return this.observerList[index];
+}
+};
+ObserverList.prototype.indexOf=function(obj,startIndex){
+var i=startIndex;
+while(i<this.observerList.length){
+if(this.observerList.length){
+if(this.observerList[i]===obj){
+return i;
+}
+i++;
+}
+}
+return -1;
+};
+ObserverList.prototype.removeAt=function(index){
+this.observerList.splice(index,1);
+}
+//发布者
+function Subject(){
+this.observers=new ObserverList();
+}
+Subject.prototype.addObserver=function(observer){
+this.observers.add(observer);
+}
+Subject.prototype.removeObserver=function(observer){
+this.observers.removeAt(this.observers.indexOf(observers,0));
+}
+Subject.prototype.notify=function(context){
+var observerCount=this.observers.count();
+for(var i=0;i<observerCount;i++){
+this.observers.get(i).update(context);
+}
+};
+//观察者
+function Observer(){
+this.update=function(){
+//
+}
+}
+下面不扯淡，上一个实例
+HTML
+<button id="addNewObserver">Add New Observer checkbox</button>
+<input id="mainCheckbox" type="checkbox"/>
+<div id="observersContainer"></div> 
+Javascript
+function extend(extension,obj){
+for(var key in extension){
+obj[key]=extension[key];
+}
+}
+var controlCheckbox=document.getElementById('mainCheckbox');
+addBtn=document.getElementById('addNewObserver');
+container=document.getElementById('observersContainer');
+//给新对象进行扩展
+extend(new Subject(),controlCheckbox);//checkbox为事件发布者
+//根据自己的check状态去发布通告
+controlCheckbox.onclick=function(){
+controlCheckbox.notify(controlCheckbox.checked);
+}
+add.onclick=addNewObserver;
+function addNewObserver(){
+var check=document.createElement('input');
+check.type="checkbox";
+//
+extend(new Observer(),check);
+check.update=function(value){
+this.checked=value;
+};
+controlCheckbox.addObserver(check);
+container.appendChild(check);
+}做一个
+下面对这个实现稍作分析
+实际发布者:extend(new Subject(),controlCheckbox);
+实际观察者:extend(new Observer,check);
+在addNewObserver中，先进行了元素的创建，然后增加了observer属性
+接着进行了属性扩展
+重写update为this.checked=value;
+接着进行了观察者的添加controlCheckbox.addObserver(check);
+最后在元素内控制元素可见
+Publish/Subscribe Implementations发布订阅模式与观察者模式最大的不同，就在于发布订阅模式建立了多个频道
+作为对比，我们来写一个发布订阅模式的架子
+//一个非常简单的邮件处理程序
+//对于接受信息的计数
+var mailCounter=0;
+//初始化订阅者
+//假定已经实现了
+var subscriber1=subscribe("inbox/newMessage",function(topic,data){
+$(".messageSelnder").html(data.sender);
+$('.messagePreview').html(data.body);
+})
+var subscriber2=subscribe('inbox/newMessage',function(topic,data){
+$('.newMessageCounter').html(++mailCounter);
+})
+publish("inbox/newMessage",[{
+sender:"hello@google.com",
+body:"Hey there! How are you doing today?"
+}]);
+1\Jquery版本的实现
+//Publish发布
+$(el).trigger("/login",[{username:"test",userData:"test"}]);
+//Subscribe
+$(el).on("/login",function(event){...});
+//Unsuscribe
+$(el).off("/login");
+2\JS实现
+var pubsub={};
+(function(myObject){
+//主题/频道的存储
+var topics={};
+//主题标识符
+var subUid=-1;
+//在特定的主题上发布或者广播事件，并让数据得以传递
+myObject.publish=function(topic,args){
+if(!topics[topic]){
+return false;
+}
+var subscriber=topics[topic],
+len=subscribers?subscriber.length:0;
+while(len--){
+//这里调用subscriber的func函数，并向subscriber发送参数
+subscribers[len].func(topic,args);
+}
+return this;
+};
+//订阅一个事件，并传入一个回调函数，事件或主题被观察到时，回调函数自执行
+myObject.subscribe=function(topic,func){
+if(!topics[topic]){
+topics[topic]=[];
+}
+var token=(++subUid).toString();
+topics[topic].push({
+token:token,
+func:func
+});
+return token;
+}
+//取消订阅
+myObject.unSubscribe=function(token){
+for(var m in topics){
+if(topics[m]){
+for(var i=0;j=topics[m].length;i<j;i++){
+if(topice[m][i].token===token){
+topics[m].splice(i,1);
+return token;
+}
+}
+}
+}
+return this;
+};
+})(pubsub);
+//简单分析一下上面的代码。首先是一个import入口，可以将任何对象注册为一个新的发布订阅管理者
+//接着对象中有三个方法，可以分别发布topic+args;订阅topic,func,其中func可以接受topic,func参数;
+//取消订阅token.需要注意的是，这里每一次订阅会有一个token标识符，可以直接由token取消订阅
+
+
+The Mediator Pattern//媒介者模式
+1\媒介者模式，通常通过一个对象来建立频道并分发多个事件。相似的还有大家熟知的发布订阅或事件聚簇。在现实世界中，中介代表中立的一方，协助调节冲突和商讨谈判。这里对的Mediator允许我们通过系统中不同的部分可能的交流，露出一个统一的接口。
+2\有个比喻：飞机场的飞机就是各个模块。塔台的负责沟通所有的飞机，塔台相当于一个Mediator
+3\当谈到发布订阅和媒介者，貌似看起来这两个牧师的实现有许多相似的地方，甚至是可以互换的。但实际上的语法和使用这两个模式的意图是十分不同的
+4\媒介者和发布订阅最大的不同在于，发布定于集中的管理了事件分发，而媒介者管理者不同对象之间的关系，并代理一部分工作流和处理过程
+用到两种模式的例子
+1\
+var MenuItem=MyFrameworkView.extend({
+events:{
+'click .thatThing':'clickedIt'
+}:,
+clickedIt:function(e){
+e.preventDefault();
+//假设触发'menu:click:foo'
+MyFramework.trigger('menu:click:'+this.model.get('name'));
+}
+})
+// 
+var MyWorkflow=function(){
+MyFramework.on('menu:click:foo',this.doStuff,this);
+}
+//
+MyWorkflow.prototype.doStuff=function(){
+// 实例化多个对象
+// 为这些对象设立事件处理函数
+// 将所有的对象整合到一个有意义的工作流中
+}
+分析：这个例子中，我们把工作流整体抽象出来。当MenuItem被点时，由MyFrame分发事件（订阅分发事件）
+而工作流得到事件后，进行了工作流的处理，这里充当了一个Mediator的角色
+The Prototype Pattern   //原型模式
+将一个已经存在的对象作为模板，去创建另一个对象
+这种模式在js中实现非常方便，因为js实现了本地的prototype代码,而不用像别的语言一样，模仿这一行为
+1\在ECMA5的标准中，js原型模式提供了这样的标准写法
+var vehicle={
+getModel:function(){
+console.log('The model of the vehicle is..'+this.model);
+}
+};
+var car=Object.create(vehicle,{
+'id':{
+value:MY_CLOBAL.nextId(),
+//writable:false,configurable:false by default
+enumerable:true
+},
+"model":{
+value:"Ford",
+enumerable:true
+}
+})
+//需要注意的一点使用原型创建的属性在枚举和hasOwnProperty()check中会出现问题
+2\如果不使用creat,还可以使用另一种方法
+var vehiclePrototype={
+init:function(carModel){
+this.model=carModel;
+},
+getModel:function(){
+console.log("The model of thie vehicle is.."+this.model);
+}
+};
+//创建模型代码
+function vehicle(prototypeObj){
+function F(){};
+F.prototype=prototypeObj;
+var f=new F();
+return f;
+}
+//还有一个可供选择的实现
+var beget=(function(){
+function F(){}
+return function(proto){
+F.prototype=proto;
+return new F();
+}
+})
+
+The Command Pattern//命令模式
+\命令模式将方法的调用，请求和操作封装在一个单独的对象中。让我们可以将方法的调用参数化,并将方法当做参数进行传送，根据自己的需要来执行。另外，它还可以将方法的调用与实现解耦，让我们在替换一个具体类的时候有更高级的灵活性。
+\命令模式背后的意义在于:将分发命令的职责从执行命令的对象中分离出来，将这种职责代理给其它的对象。
+\实现上，简单的命令对象将action和想要调用这个action的对象连接了起来。他们一贯包含一种操作的实现。所有的命令对象只要实现了相同的接口，就可以很简单的换掉。
+\例子
+1\
+(function(){
+var carManager={
+//retuest information
+retuestInfo:function(model,id){
+},
+//purchase the car
+buyVehicle:function(model,id){
+return "You have successfull puchased Item";
+},
+//
+arrangeViewing:function(model,id){
+}
+}
+})();
+//我们在调用这些方法的时候，都需要直接调用。我们来对这些方法做一个丑行
+carManager.execute=function(name){
+return carManager[name]&&carManager[name].apply(carManager,[].slice.call(arguments,1));
+}
+//这样我们就可以做直接的调用
+carManager.execute("arrangeViewing","Ferrari","14523");
+分析：这个模式在使用的过程中，我们将对象方法的调用进行抽象，在其它模块进行调用时可以进行统一的调用
+The Facade Pattern   //门面模式
+这个模式的理解很简单，jquery的每个方法就相当于一个门面，把jquery内部的很多方法和DOM操作都隐藏到了幕后
+example
+\1
+var addMyEvent=function(el,ev,fn){
+if(el.addEventListener){
+el.addEventListener(ev,fn,false);
+}else if(el.attachEvent){
+el.attachEvent("on"+ev,fn);
+}elae{
+el["on"+ev]=fn;
+}
+}
+bindReady:function(){
+if(document.addEventListener){
+document.addEventListener("DOMContentLoaded",DOMContentLoaded,false);
+window.addEventListener("load",jQuery.ready,false);
+}else if(document.attachEvent){
+document.attachEvent("onreadystatechange",DOMContentLoaded);
+window.attachEvent("onload",jQuery.ready);
+}
+}
+作用：
+封装复杂性
+注意：在使用的时候要权衡性能的损失。有时候多一层封装代表着更多的判断
+The Factory Pattern//工厂模式
+工厂模式有两个主要功能，组装对象和为产出提供统一接口
+Example
+//轿车的构造函数
+function Car(options){
+this.doors=options.doors||4;
+this.state=opiions.state||"brand new";
+this.color=options.color||"silver";
+}
+//卡车的构造函数
+function Truck(options){
+this.state=options.state||"used";
+this.wheelSize=options.wheelSize||"large";
+this.color=options.color||"blue";
+}
+//交通工具工厂
+function VehicleFactory(){};
+//默认的类是vehicleClass
+VehicleFactory.prototype.vehicleClass=Car;
+VehicleFactory.prototype.createVehicle=function(options){
+switch(options.vehicleType){
+case "car":
+this.vehicleClass=Car;
+break;
+case "truck":
+this.vehicleClass=Truck;
+break;
+}
+return new this.vehicleClass(options);
+};
+var carFacotry=new VehicleFactory();
+var car=carFacotry.createVehicle({
+vehicleType:"car",
+color:"yellow",
+doors:6
+});
+//
+console.log(car instanceof Car);
+console.log(car);
+分析：
+工厂作为一个实例，需要被构建出来。VehicleFactory即为工厂类
+这个工厂类需要有一个工厂方法VehicleFactory.prototype.createVehicle=function...
+工厂方法根据传入的参数进行选择穿件car还是truck
+最后会根据vehicleClass返回一个new对象 return new this.vehicleClass(options);
+子类的使用
+function TruckFactory(){};
+TruckFactory.prototype=new VehicleFactory();
+TruckFactory.prototype.vehicleClass=Truck;
+var truckFactory=new TruckFactory();
+var myBigTruck=truckFactory.createVehicle({
+state:"omg",
+color:"pink",
+wheelSize:"so big"
+})
+Abstract Factories//抽象
+抽象工厂将一系列有相同目标的工厂，封装起来。
+var abstractVehicleFactory=(function(){
+//用于存储具体交通工具的类型
+var types={};
+return{
+getVehicle:function(type,customizations){
+var Vehicle=types[type];
+return(Vehicle?new Vehicle(customizations):null);
+},
+registerVehicle:function(type,Vehicle){
+var proto=Vehicle.prototype;
+//实现了接口才会进行工厂返回
+if(proto.drive&&proto.breakDown){
+//这里做具体工厂的注册
+types[type]=Vehicle;
+}
+//可以链式调用
+return abstractVehicleFactory;
+}
+}
+})();
+abstractVehicleFactory.registerVehicle('car',car).registerVehicle('truck',Truck);
+//实例化一个类
+var car=abstractVehicleFactory.getVehicle('car',{
+color:'lime green',
+state:'like new'
+});
+var truck=abstractVehicleFactory.getVehicle('truck',{
+wheelSize:'medium',
+color:'neon yellow'
+})
+Mixin Pattern
+subClass//子类
+var Person=function(firstName,lastName){
+this.firstName=firstName;
+this.lastName=lastName;
+this.gender='male';
+}
+//实例化一个普通人类
+var clark=new Person('Clark','Kent');
+var Superhero=function(firstName,lastName,powers){
+Person.call(this,firstName,lastName);
+this.powers=powers;
+};
+//使用prototype继承person的方法
+Superhero.prototype=Object.create(Person.prototype);
+var Superhero.prototype=Object.create(Person.prototype);
+var superman=new Superhero('Clark','Kent',['flight','heat-vision']);
+console.log(superman);
+Mixins//混入功能
+我们可以将混合继承看做收集不同的功能。
+var Car=function(settings){
+this.model=settings.model||'no model provided';
+this.color=settings.color||'no color provided';
+};
+//即将被mixin的类，拥有下面这些方法
+Mixin=function(){};
+Mixin.prototype={
+driveForward:function(){
+console.log('drive forward');
+},
+driveBackward:function(){
+console.log('drive backward');
+},
+driveSideways:function(){
+console.log('drive sideways');
+}
+}
+function augment(receivingClass,givingClass){
+//混入一部分方法
+if(arguments[2]){
+for(var i=2,len=arguments.length;i<len;i++){
+receivingClass.prototype[arguments[i]]=givingClass.prototype[arguments[i]];
+}
+}
+//混入所有的方法
+else{
+for(var methodName in givingClass.prototype){
+if(!Object.hasOwnProperty.call(receivingClass.prorotype,methodName)){
+receivingClass.prorotype[methodName]=givingClass.prorotype[methodName];
+}
+}
+}
+}
+//使用augement方法来增强driveBackward
+augment(Car,Mixin,'driveForward','driveBackward');
+//Create a new Car
+var myCar=new Car({
+model:"Mercedes benz",
+color:'blue'
+});
+//测试
+myCar.driveForward();
+myCar.driveBackward();
+augment(Car,Mixin);
+var mySportsCar=new Car({
+model:'Porsche',
+color:'red'
+});
+mySportsCar.driveSideways();
+
+The Desorator Pattern    //装饰模式
+装饰者是一个结构化的设计模式，用于实现代码的重用。类似于混入，可以想象成另一个继承模式的变种
+Example1:
+为构造函数增加功能
+function Vehicle(vehicleType){
+//some sane defaults
+this.vehicleType=vehicleType||"car";
+this.model="default";
+this.license="00000-00000";
+};
+//创建一个普通的car
+var testInstance=new Vehicle('car');
+console.log(testInstance);
+//
+var truck=new Vehicle('truck');
+truck.setModel=function(modelName){
+this.model=modelName;
+}
+truck.setColor=function(color){
+this.color=color;
+}
+//这里添加了一些普通的方法
+console.log(truck);
+Example2:
+//等待装饰的构造函数
+function MacBook(){
+this.cost=function(){
+return 997;
+}
+this.screenSize=function(){
+return 11.6;
+}
+}
+//装饰者一号
+function memory(macbook){
+var v=macbook.cost();
+macbook.cost=function(){
+return v+75;
+}
+}
+//装饰者二号
+function engraving(macbook){
+var v=macbook.cost();
+macbook.cost=function(){
+return v+200;
+}
+}
+//装饰者三号
+function insurance(macbook){
+var v=macbook.cost();
+macbook.cost=function(){
+return v+250;
+}
+}
+//进行多种装饰，实现代码重用
+var mb=new MacBook();
+memory(mb);
+engraving(mb);
+insurance(mb);
+console.log(mb.cost());
+//
+console.log(mb.screenSize());
+//decorator重写了macbook的方法
+伪类实现装饰者模式
+来自Pro JavaScript Design Patterns的装饰者有这样的描述：装饰者用于将对象包在另一个实现相同接口的对象中;
+例子：（关于接口的实现详见PJDP书中的描述，这里只写模式实现）
+//这里借由已经实现的接口对象来创建接口
+var reminder=new Interface("List",["summary","placeOrder"]);
+//这个属性显然实现了上面几口中的方法，让我们继续往下看
+var properties={
+name:"Remember to buy the milk",
+date:"05/06/2016",
+actions:{
+summary:function(){
+return "Remember to buy the milk,we are almost out!";
+},
+placeOrder:function(){
+return "Ordering milk from your local grocery store";
+}
+}
+}
+//创建一个构造函数
+function Todo(config){
+//确定config.actions中包含实现了这些参数
+Interface.ensureImplements(config.actions,reminder);
+this.name=config.name;
+this.methods=config.methods;
+}
+//让todoItem拥有这些方法
+var todoItem=Todo(properties);
+
+测试代码:
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>imgGrid</title>
+<script type="text/javascript" src="js/jquery-2.0.2.min.js"></script>
+<script type="text/javascript">
+var testModule=(function(){
+var counter=0;
+return {
+config:{
+name:"testModule"
+},
+incrementCounter:function(){
+console.log(this.config.name);
+return counter++;
+},
+resetCounter:function(){
+console.log("counter value prior to reset: "+counter);
+counter=0;
+}
+};
+})();
+testModule.incrementCounter();
+</script>
+</head>
+<body>
+</body>
+</html>
+
+
+
+
+
+
